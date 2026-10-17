@@ -13,7 +13,7 @@
 [![Files](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)&nbsp;[![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)&nbsp;[![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/releases)
 
 <!-- Row 5: Custom Metrics -->
-[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/52393fb36dc28479957fbb381dda208a/raw/aws-lab01-vpc-single-public-subnet.json)](https://gist.github.com/subhamay-bhattacharyya/52393fb36dc28479957fbb381dda208a)
+[![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/9b0a9c7309f6881810bdef55838d5f8f/raw/aws-lab01-vpc-single-public-subnet.json)](https://gist.github.com/subhamay-bhattacharyya/9b0a9c7309f6881810bdef55838d5f8f)
 
 ---
 
