@@ -2,7 +2,16 @@
 
 ### 🐛 Bug Fixes
 
+- Update KeyPairName to match the intended configuration
+## [Rel-002-20261019193519] - 2026-10-19
+
+### 🐛 Bug Fixes
+
 - Update progress tracker and README badges for accuracy
+
+### 📚 Documentation
+
+- Update CHANGELOG.md [skip ci]
 ## [Rel-001-20261019182503] - 2026-10-19
 
 ### 🚀 Features
