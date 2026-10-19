@@ -269,7 +269,7 @@ Resources:
         ProjectName: !Ref ProjectName
         InstanceBaseName: "public-ec2"
         Environment: !Ref Environment
-        CiSuffix: ""
+        CiSuffix: !Ref CiSuffix
         ImageId: !Ref ImageId
         InstanceType: !Ref InstanceType
         KeyName: !Ref KeyPairName
