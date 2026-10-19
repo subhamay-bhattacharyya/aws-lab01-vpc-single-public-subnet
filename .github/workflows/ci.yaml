@@ -5,11 +5,9 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - feature/**
-      - bug/**`
-    paths:
-      - 'cloudformation/**'
-      - .github/workflows/ci.yaml
+      - bug/**
   pull_request:
     branches: [main]
     paths:
