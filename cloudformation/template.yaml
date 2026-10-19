@@ -6,6 +6,7 @@ Description: |
   - Internet Gateway attached to the VPC (via nested VPC stack)
   - One public subnet in us-east-1a (CIDR from SubnetCidrBlocks) with a route table holding a default route to the Internet Gateway (via nested public subnets stack)
   - SSH-only security group with inbound SSH access from 0.0.0.0/0 (via nested security groups stack)
+  - EC2 instance launched in the public subnet with the SSH-only security group attached and the key pair from KeyPairName (via nested EC2 instance stack)
 
 Metadata:
   AWS::CloudFormation::Interface:
