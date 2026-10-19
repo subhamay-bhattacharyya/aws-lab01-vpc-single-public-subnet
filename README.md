@@ -30,9 +30,9 @@ The diagram shows the default lab values from `cloudformation/parameters.json`:
 - **Internet gateway:** attached to the VPC
 - **Route table:** `10.10.0.0/16 → local` and `0.0.0.0/0 → igw-xxxxxx`, associated with the public subnet
 - **Security group:** allows inbound SSH from the internet
-- **EC2 instance:** launched in the public subnet with a public IP address
+- **EC2 instance:** launched in the public subnet via the nested EC2 stack (private IP only, since the nested template does not export a public IP)
 
-Traffic path: the user connects over SSH to the EC2 instance's public IP. The security group admits the connection, and the route table sends return traffic through the internet gateway.
+Traffic path: the EC2 instance sits in the public subnet, whose route table sends traffic through the internet gateway. The security group admits SSH from `0.0.0.0/0`. The root stack exports only the instance's private IP, so SSH from outside the VPC needs a different route to the instance.
 
 ## Repository Layout
 
@@ -56,7 +56,7 @@ The root template (`cloudformation/template.yaml`) creates these resources. The 
 | `VpcNestedStack` | Nested stack | `cfn-nested-aws-vpc/template.yaml` | VPC with DNS support and hostnames, and an internet gateway |
 | `PublicSubnetsNestedStack` | Nested stack | `cfn-nested-aws-subnets/template.yaml` | One public subnet in `us-east-1a` with a default route to the internet gateway |
 | `WebSecurityGroupNestedStack` | Nested stack | `cfn-nested-aws-ec2-security-group/template.yaml` | SSH-only security group (inbound TCP 22 from `0.0.0.0/0`) |
-| `EC2Instance` | Resource | — | EC2 instance in the public subnet with a public IP |
+| `Ec2Instance` | Nested stack | `cfn-nested-aws-ec2-instance/template.yaml` | EC2 instance in the public subnet, with the web security group and the key pair from `KeyPairName` |
 
 ## Parameters
 
@@ -81,7 +81,7 @@ The lab values in `cloudformation/parameters.json` override some defaults (for e
 | Output | Description |
 | --- | --- |
 | `EC2InstanceId` | ID of the EC2 instance |
-| `EC2InstancePublicIp` | Public IP address of the EC2 instance |
+| `EC2InstancePrivateIp` | Private IP address of the EC2 instance (the nested EC2 template does not export a public IP) |
 | `VpcId` | ID of the VPC |
 | `InternetGatewayId` | ID of the internet gateway |
 | `PublicSubnet1Arn` | ARN of the public subnet |
@@ -91,7 +91,7 @@ The lab values in `cloudformation/parameters.json` override some defaults (for e
 ## Prerequisites
 
 - An AWS account and credentials for the AWS CLI
-- An S3 bucket in `us-east-1` containing the three nested templates listed above, and read access for the deploying principal
+- An S3 bucket in `us-east-1` containing the four nested templates listed above, and read access for the deploying principal
 - An existing EC2 key pair in the target region, for SSH access
 
 ## Deploy
@@ -113,16 +113,16 @@ aws cloudformation wait stack-create-complete \
   --region us-east-1
 ```
 
-Get the public IP and connect:
+Get the private IP (reachable only from inside the VPC) and connect:
 
 ```bash
-PUBLIC_IP=$(aws cloudformation describe-stacks \
+PRIVATE_IP=$(aws cloudformation describe-stacks \
   --stack-name aws-lab01-vpc-single-public-subnet \
-  --query 'Stacks[0].Outputs[?OutputKey==`EC2InstancePublicIp`].OutputValue' \
+  --query 'Stacks[0].Outputs[?OutputKey==`EC2InstancePrivateIp`].OutputValue' \
   --output text \
   --region us-east-1)
 
-ssh -i <path-to-key>.pem ec2-user@$PUBLIC_IP
+ssh -i <path-to-key>.pem ec2-user@$PRIVATE_IP
 ```
 
 ## Clean Up

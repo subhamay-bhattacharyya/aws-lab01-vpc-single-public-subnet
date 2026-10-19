@@ -1,5 +1,5 @@
 {
-  "stackName": "aws-lab01-vpc-single-public-subnet",
+  "stackName": "aws-netwk-lab01-vpc-single-public-subnet-stack",
   "templateFile": "cloudformation/template.yaml",
   "parameterFile": "cloudformation/parameters.json"
 }
