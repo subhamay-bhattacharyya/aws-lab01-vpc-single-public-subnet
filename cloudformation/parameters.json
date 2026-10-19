@@ -3,6 +3,6 @@
   "ProjectName": "netwk-lab01",
   "VPCCidrBlock": "10.11.0.0/16",
   "SubnetCidrBlocks": "10.11.0.0/20",
-  "KeyPairName": "networking-lab.pem",
+  "KeyPairName": "test-key-pair",
   "CiSuffix": ""
 }
