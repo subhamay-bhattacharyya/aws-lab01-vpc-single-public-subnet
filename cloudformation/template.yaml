@@ -139,7 +139,8 @@ Parameters:
     ConstraintDescription: "Must be one of the allowed instance types"
 
   KeyPairName:
-    Type: AWS::EC2::KeyPair::KeyName
+    Type: String
+    Default: "networking-lab.pem"
     Description: "Name of an existing EC2 key pair to use for SSH access. The console lists the key pairs available in this account and region"
     ConstraintDescription: "Must be the name of an existing EC2 key pair in this account and region"
 
