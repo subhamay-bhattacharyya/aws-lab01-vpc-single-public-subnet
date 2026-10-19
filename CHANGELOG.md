@@ -1,5 +1,10 @@
 ## [unreleased]
 
+### 🐛 Bug Fixes
+
+- Update progress tracker and README badges for accuracy
+## [Rel-001-20261019182503] - 2026-10-19
+
 ### 🚀 Features
 
 - Remove package.json file and its associated configurations
@@ -20,6 +25,10 @@
 - Reference CiSuffix parameter in EC2 instance resource configuration
 - Update CI and development environment references in environments.yaml
 - Update CI workflow triggers and remove unused jobs
+
+### 📚 Documentation
+
+- Update CHANGELOG.md [skip ci]
 
 ### ⚙️ Miscellaneous Tasks
 
