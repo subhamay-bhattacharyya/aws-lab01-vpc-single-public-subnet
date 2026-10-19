@@ -42,3 +42,6 @@ dist/
 # .env.local
 # .env.production
 # .env.test
+
+# KeyPair pem file
+*.pem

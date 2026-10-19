@@ -1,12 +1,12 @@
 name: CI Build Workflow
-description: CI Build Workflow for CloudFormation VPC Subnet Stack run by {{ github.actor }}
+description: CI Build Workflow for Networking Lab-01 Stack run by {{ github.actor }}
 
 on:
   workflow_dispatch:
   push:
     branches:
       - feature/**
-      - bug/**
+      - bug/**`
     paths:
       - 'cloudformation/**'
       - .github/workflows/ci.yaml
