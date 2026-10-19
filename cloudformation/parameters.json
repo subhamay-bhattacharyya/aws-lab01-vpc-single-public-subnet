@@ -1,6 +1,6 @@
 {
   "Environment": "devl",
-  "ProjectName": "netwoking",
+  "ProjectName": "netwk-lab01",
   "VPCCidrBlock": "10.10.0.0/16",
   "SubnetCidrBlocks": "10.10.0.0/20",
   "CiSuffix": ""
