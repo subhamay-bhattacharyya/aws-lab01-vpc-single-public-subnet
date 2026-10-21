@@ -1,10 +1,10 @@
 # AWS Networking Lab 01: Public VPC with SSH-Accessible EC2 Instance
 
 <!-- Row 1: Status - Most Important -->
-[![Release](https://img.shields.io/github/v/release/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet?label=Release)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/releases)&nbsp;[![Release Workflow](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/actions/workflows/ci.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/actions/workflows/release.yaml)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/commits)
+[![Release](https://img.shields.io/github/v/release/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet?label=Release)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/releases)&nbsp;[![Release Workflow](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/actions/workflows/ci.yaml/badge.svg)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/actions/workflows/ci.yaml)&nbsp;[![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/issues)&nbsp;[![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/commits)
 
 <!-- Row 2: Code Quality -->
-[![Top Language](https://img.shields.io/badge/Languages-Python%20%7C%20YAML-blue)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/commits)
+[![Top Language](https://img.shields.io/badge/Languages-YAML-blue)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)&nbsp;[![Commits](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet)](https://github.com/subhamay-bhattacharyya/aws-lab01-vpc-single-public-subnet/commits)
 
 <!-- Row 3: Tech Stack -->
 [![CloudFormation](https://img.shields.io/badge/CloudFormation-IaC-orange?logo=amazonaws&logoColor=white)](https://aws.amazon.com/cloudformation/)&nbsp;[![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757?logo=anthropic&logoColor=white)](https://claude.ai/)
@@ -55,8 +55,8 @@ The root template (`cloudformation/template.yaml`) creates these resources. The 
 | --- | --- | --- | --- |
 | `VpcNestedStack` | Nested stack | `cfn-nested-aws-vpc/template.yaml` | VPC with DNS support and hostnames, and an internet gateway |
 | `PublicSubnetsNestedStack` | Nested stack | `cfn-nested-aws-subnets/template.yaml` | One public subnet in `us-east-1a` with a default route to the internet gateway |
-| `WebSecurityGroupNestedStack` | Nested stack | `cfn-nested-aws-ec2-security-group/template.yaml` | SSH-only security group (inbound TCP 22 from `0.0.0.0/0`) |
-| `Ec2Instance` | Nested stack | `cfn-nested-aws-ec2-instance/template.yaml` | EC2 instance in the public subnet, with the web security group and the key pair from `KeyPairName` |
+| `SSHSgNestedStack` | Nested stack | `cfn-nested-aws-ec2-security-group/template.yaml` | SSH-only security group (inbound TCP 22 from `0.0.0.0/0`) |
+| `Ec2Instance` | Nested stack | `cfn-nested-aws-ec2-instance/template.yaml` | EC2 instance in the public subnet, with the SSH-only security group and the key pair from `KeyPairName` |
 
 ## Parameters
 
@@ -64,12 +64,12 @@ The root template (`cloudformation/template.yaml`) creates these resources. The 
 | --- | --- | --- |
 | `NestedStacksS3BucketName` | `subhamay-cfn-templates-bucket-270453428528-us-east-1` | S3 bucket that holds the nested templates |
 | `SubnetQualifier` | `public` | Qualifier added to subnet names (only `public` is allowed) |
-| `ProjectName` | `networking` | Project name used in resource names (lowercase letters, numbers, hyphens; max 20 characters) |
+| `ProjectName` | `netwk-lab01` | Project name used in resource names (lowercase letters, numbers, hyphens; max 20 characters) |
 | `Environment` | `devl` | Deployment environment |
 | `VPCCidrBlock` | `10.100.0.0/16` | CIDR block for the VPC |
 | `SubnetCidrBlocks` | `10.100.0.0/20` | CIDR block for the public subnet |
 | `CiSuffix` | `""` | Optional suffix appended to resource names (used for CI runs) |
-| `SSHOnlySecurityGroupBaseName` | `ssh-sg` | Base name for the security group |
+| `SshSgBaseName` | `ssh-sg` | Base name for the security group |
 | `ImageId` | Latest Amazon Linux 2023 x86_64 AMI | SSM parameter that resolves to the AMI ID |
 | `InstanceType` | `t3.micro` | One of `t3.micro`, `t3.small`, `t3.medium`, `t2.micro` |
 | `KeyPairName` | — (required) | Name of an existing EC2 key pair for SSH |
@@ -85,8 +85,8 @@ The lab values in `cloudformation/parameters.json` override some defaults (for e
 | `VpcId` | ID of the VPC |
 | `InternetGatewayId` | ID of the internet gateway |
 | `PublicSubnet1Arn` | ARN of the public subnet |
-| `SSHOnlySecurityGroupId` | ID of the SSH-only security group |
-| `SSHOnlySecurityGroupName` | Name of the SSH-only security group |
+| `SshSgId` | ID of the SSH-only security group |
+| `SshSgName` | Name of the SSH-only security group |
 
 ## Prerequisites
 
@@ -101,7 +101,7 @@ aws cloudformation create-stack \
   --stack-name aws-lab01-vpc-single-public-subnet \
   --template-body file://cloudformation/template.yaml \
   --parameters \
-    ParameterKey=ProjectName,ParameterValue=netwoking \
+    ParameterKey=ProjectName,ParameterValue=netwk-lab01 \
     ParameterKey=Environment,ParameterValue=devl \
     ParameterKey=VPCCidrBlock,ParameterValue=10.10.0.0/16 \
     ParameterKey=SubnetCidrBlocks,ParameterValue=10.10.0.0/20 \

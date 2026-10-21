@@ -29,7 +29,7 @@ Metadata:
       - Label:
           default: "Security Group Configuration"
         Parameters:
-          - SSHOnlySecurityGroupBaseName
+          - SshSgBaseName
       - Label:
           default: "EC2 Instance Configuration"
         Parameters:
@@ -53,7 +53,7 @@ Metadata:
         default: "VPC CIDR block (e.g., 10.0.0.0/16)"
       SubnetCidrBlocks:
         default: "Subnet CIDR blocks (comma-separated, e.g., 10.10.0.0/20)"
-      SSHOnlySecurityGroupBaseName:
+      SshSgBaseName:
         default: "SSH Only Security Group Base Name"
       ImageId:
         default: "EC2 Image (AMI) SSM Parameter"
@@ -92,8 +92,12 @@ Parameters:
 
   Environment:
     Type: String
-    Default: devl
-    Description: "Deployment environment"
+    Default: "devl"
+    AllowedValues: 
+      - devl
+      - test
+      - prod
+    Description: "Deployment environment (devl, test, prod)"
 
   VPCCidrBlock:
     Type: String
@@ -114,7 +118,7 @@ Parameters:
     Default: ""
     Description: "Optional CI suffix to append to the bucket name"
 
-  SSHOnlySecurityGroupBaseName:
+  SshSgBaseName:
     Type: String
     Default: "ssh-sg"
     Description: "Base name for the SSH-only security group, combined with the project and environment names"
@@ -141,7 +145,7 @@ Parameters:
 
   KeyPairName:
     Type: String
-    Default: "networking-lab.pem"
+    Default: "networking-lab"
     Description: "Name of an existing EC2 key pair to use for SSH access. The console lists the key pairs available in this account and region"
     ConstraintDescription: "Must be the name of an existing EC2 key pair in this account and region"
 
@@ -233,7 +237,7 @@ Resources:
       Parameters:
         VpcId: !GetAtt VpcNestedStack.Outputs.VPCId
         ProjectName: !Ref ProjectName
-        SecurityGroupBaseName: !Ref SSHOnlySecurityGroupBaseName
+        SecurityGroupBaseName: !Ref SshSgBaseName
         SecurityGroupDescription: "Security group for SSH-only access"
         Rule1RuleSet: "SSHOnly"
         Rule1SourceCidr: "0.0.0.0/0"
@@ -309,10 +313,10 @@ Outputs:
     Description: "ARN of public subnet 1 created by the nested subnets stack"
     Value: !Sub "arn:${AWS::Partition}:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${PublicSubnetsNestedStack.Outputs.SubnetId1}"
 
-  SSHOnlySecurityGroupId:
+  SshSgId:
     Description: "ID of the SSH-only security group created by the nested security groups stack"
     Value: !GetAtt SSHSgNestedStack.Outputs.SecurityGroupId
 
-  SSHOnlySecurityGroupName:
+  SshSgName:
     Description: "Name of the SSH-only security group created by the nested security groups stack"
     Value: !GetAtt SSHSgNestedStack.Outputs.SecurityGroupName
